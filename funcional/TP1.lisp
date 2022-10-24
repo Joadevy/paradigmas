@@ -132,6 +132,66 @@
 
 ; ------------------- NIVEL 3 -------------------
 
+; 19) Calculo del i-esimo numero perfecto (igual a la suma de sus divisores)
+
+; No incluye al numero en si mismo (no se usa en num perfecto)
+(defun divisoresDelPerfecto (numero divisor)
+  (cond
+   ((= numero divisor) nil)
+   ((= (mod numero divisor) 0) (cons divisor (divisoresDelPerfecto numero (+ divisor 1))))
+   (T (divisoresDelPerfecto numero (+ divisor 1)))))
+
+(defun sumaDivisoresDe (numero)
+  (sumatoriaElementosLista (divisoresDe numero 1)))
+
+; El dominio son numeros > 0 (suma de los divisores = numero para ser perfecto).
+(defun esNumeroPerfecto (numero)
+  (cond
+   ((= numero (sumaDivisoresDe numero)) T)
+   (T nil)))
+
+(defun numerosPerfectosHasta (desde hasta numeros)
+  (cond
+   ((= hasta (cantidad numeros)) numeros)
+   ((esNumeroPerfecto desde) (numerosPerfectosHasta (+ desde 1) hasta (cons desde numeros)))
+   (T (numerosPerfectosHasta (+ desde 1) hasta numeros))))
+
+; Hasta I = 4 soporta (6, 28, 496, 8128) el 5 es 33550336
+(defun I-numeroPerfecto (I) 
+  (first (numerosPerfectosHasta 1 I nil)))
+
+; 20) Lista de primeros N numeros primos
+
+; Devuelve TODOS los divisores del num (a diferencia del divisores para perfectos)
+(defun divisoresDe (numero divisor)
+  (cond
+   ((= numero divisor) (cons numero nil))
+   ((= (mod numero divisor) 0) (cons divisor (divisoresDe numero (+ divisor 1))))
+   (T (divisoresDe numero (+ divisor 1)))))
+  
+(defun tieneDosDivisores (numero)
+  (= 2 (cantidad (divisoresDe numero 1))))
+
+(defun son1yElMismoNumero (divisores numero)
+  (and (= 1 (first divisores)) (= numero (first (rest divisores)))))
+
+(defun esPrimo (numero)
+  (and (tieneDosDivisores numero) (son1yElMismoNumero (divisoresDe numero 1) numero)))
+
+(defun numerosPrimosHasta (desde cant primos)
+  (cond
+   ((= cant (cantidad primos)) primos)
+   ((esPrimo desde) (numerosPrimosHasta (+ desde 1) cant (cons desde primos)))
+   (T (numerosPrimosHasta (+ 1 desde) cant primos))))
+
+(defun N-numerosPrimos (N)
+ (numerosPrimosHasta 1 N nil))
+  
+  
+  
+
+
+
 
 
 
