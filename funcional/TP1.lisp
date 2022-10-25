@@ -89,11 +89,11 @@
   (+ (+ n (cuadradoDe n)) (n-esimaPot n 3)))
 
 ; 14) Eliminar todas las ocurrencias de un elemento en una lista
-(defun eliminarOcurrencias (lista elemento)
+(defun eliminarOcurrenciasDe (elemento lista)
   (cond
    ((null lista) nil)
-   ((= elemento (first lista)) (eliminarOcurrencias (rest lista) elemento))
-   (T (cons (first lista) (eliminarOcurrencias (rest lista) elemento)))))
+   ((= elemento (first lista)) (eliminarOcurrenciasDe elemento (rest lista)))
+   (T (cons (first lista) (eliminarOcurrenciasDe elemento (rest lista))))))
 
 ; 15) Reemplaza en una lista un elemento por otro.
 (defun reemplazar (lista elemento reemplazo)
@@ -142,13 +142,11 @@
    (T (divisoresDelPerfecto numero (+ divisor 1)))))
 
 (defun sumaDivisoresDe (numero)
-  (sumatoriaElementosLista (divisoresDe numero 1)))
+  (sumatoriaElementosLista (divisoresDelPerfecto numero 1)))
 
 ; El dominio son numeros > 0 (suma de los divisores = numero para ser perfecto).
 (defun esNumeroPerfecto (numero)
-  (cond
-   ((= numero (sumaDivisoresDe numero)) T)
-   (T nil)))
+   (= numero (sumaDivisoresDe numero)))
 
 (defun numerosPerfectosHasta (desde hasta numeros)
   (cond
@@ -187,12 +185,42 @@
 (defun N-numerosPrimos (N)
  (numerosPrimosHasta 1 N nil))
   
+; 21)  Varianza (muestral) de una lista de numeros
   
-  
+(defun varianzaDe (numeros media cantidad)
+  (cond
+   ((null numeros) 0)
+   (T (+ (/ (cuadradoDe (- (first numeros) media)) (- cantidad 1)) (varianzaDe (rest numeros) media cantidad)))))
+
+(defun Varianza (numeros)
+  (varianzaDe numeros (media numeros) (cantidad numeros)))
+
+; 22) Moda de una lista de numeros
+; Devuelve el numero de repeticiones del elemento en la lista
+(defun repeticionesDe (elemento lista)
+  (cond
+   ((null lista) 0)
+   ((= elemento (first lista)) (+ 1 (repeticionesDe elemento (rest lista))))
+   (T (repeticionesDe elemento (rest lista)))))
+
+; Busca el numero de repeticiones maxima de un elemento en la lista
+(defun repeticionesMaximaEn (lista)
+  (cond
+   ((null (rest lista)) (repeticionesDe (first lista) lista))
+   ((> (repeticionesDe (first lista) lista) (repeticionesMaximaEn (eliminarOcurrenciasDe (first lista) lista))) (repeticionesDe (first lista) lista))
+   (T (repeticionesMaximaEn (eliminarOcurrenciasDe (first lista) lista)))))
+
+; Busca el elemento cuya repeticion = maxima cantidad de repeticiones.
+(defun moda (lista)
+  (cond 
+   ((null (rest lista)) (first lista))
+   ((= (repeticionesDe (first lista) lista) (repeticionesMaximaEn lista)) (first lista))
+   (T (moda (eliminarOcurrenciasDe (first lista) lista)))))
 
 
-
-
+; 23) Cantidad de numeros que contiene una lista
+(defun hola ()
+       "saludo con hola")
 
 
   
