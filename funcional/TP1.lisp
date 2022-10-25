@@ -219,8 +219,44 @@
 
 
 ; 23) Cantidad de numeros que contiene una lista
-(defun hola ()
-       "saludo con hola")
+;(defun esNumero (elemento)
+ ; Como se determina si un elemento es numero?
+
+; 24) Funcion que transforma un numero binario (expresado como lista) a decimal.
+(defun reverso (lista)
+  (cond
+   ((= (cantidad lista) 0) nil)
+   (T (cons (elementoEn lista (cantidad lista)) (reverso (eliminarElemento lista (cantidad lista)))))))
+
+(defun obtenerDecimal (listaReversed indice)
+  (cond
+   ((null (rest listaReversed)) (* (first listaReversed) (n-esimaPot 2 indice)))
+   (T (+ (* (first listaReversed) (n-esimaPot 2 indice)) (obtenerDecimal (rest listaReversed) (+ 1 indice))))))
+   
+(defun binAdec (binario)
+ (obtenerDecimal (reverso binario) 0))
+
+; 25) Suma de binarios (convierte a decimal, los suma y los trae a binario)
+(defun obtenerBinario (decimal)
+  (cond
+   ((= decimal 0) (cons 0 nil))
+   ((> 2 decimal) (cons 1 nil))
+   (T (cons (mod decimal 2) (obtenerBinario (floor (/ decimal 2)))))))
+
+(defun decAbin (decimal)
+  (reverso (obtenerBinario decimal)))
+
+(defun +Binario (b1 b2)
+  (decAbin (+ (binAdec b1) (binAdec b2))))
+
+; 26) Transformar un entero decimal a binario
+; Es la funcion decAbin definida para el punto anterior.
+
+; 27) Determinar si una lista es palindromo => La lista debe ser igual a su reverso.
+; Necesito una funcion que tomando como entrada la lista y su reversa valide posicion a posicion que sean iguales.
+
+  
+
 
 
   
