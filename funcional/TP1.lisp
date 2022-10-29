@@ -195,6 +195,16 @@
 (defun Varianza (numeros)
   (varianzaDe numeros (media numeros) (cantidad numeros)))
 
+; Implementacion de la varianza usando un MAP:
+(defun calculaVarianza (numero media cantidad)
+  (/ (cuadradoDe (- numero media)) (- cantidad 1)))
+
+(defun varianzaMapeada (numeros media cantidad)
+   (sumatoriaElementosLista (mapear numeros (Lambda (num) (calculaVarianza num media cantidad)))))
+
+(defun varianzaMapDe (numeros)
+  (varianzaMapeada numeros (media numeros) (cantidad numeros)))
+
 ; 22) Moda de una lista de numeros
 ; Devuelve el numero de repeticiones del elemento en la lista
 (defun repeticionesDe (elemento lista)
@@ -217,6 +227,19 @@
    ((= (repeticionesDe (first lista) lista) (repeticionesMaximaEn lista)) (first lista))
    (T (moda (eliminarOcurrenciasDe (first lista) lista)))))
 
+ (defun moda2 (lista)
+  (cond 
+   ((null (rest lista)) (first lista))
+; Esta comparacion esta mal porque solo compara contra las repeticiones del elemento que sigue, no contra todas las otras.
+   ((> (repeticionesDe (first lista) lista) (repeticionesDe (first (eliminarOcurrenciasDe (first lista) lista)) (eliminarOcurrenciasDe (first lista) lista))) (first lista))
+   (T (moda2 (eliminarOcurrenciasDe (first lista) lista)))))
+
+; La moda se debe hacer similar al maximo:
+;(defun maximo (lista)
+ ; (cond
+  ; ((null (rest lista)) (first lista))
+   ;((> (first lista) (maximo (rest lista))) (first lista))
+  ; (T (maximo (rest lista)))))
 
 ; 23) Cantidad de numeros que contiene una lista
 ;(defun esNumero (elemento)
@@ -255,11 +278,47 @@
 ; 27) Determinar si una lista es palindromo => La lista debe ser igual a su reverso.
 ; Necesito una funcion que tomando como entrada la lista y su reversa valide posicion a posicion que sean iguales.
 
-  
+(defun =Contenido (lista1 lista2)
+  (cond
+   ((/= (cantidad lista1) (cantidad lista2)) nil)
+   ((and (null lista1) (null lista2)) T)
+   ((= (first lista1) (first lista2)) (=Contenido (rest lista1) (rest lista2)))
+   (T nil)))
 
+(defun esPalindromo (lista)
+  (=Contenido lista (reverso lista)))
 
+; 40) Función que tome una lista de números y una condición (función) como parámetros y devuelva la sumatoria de los elementos que cumplen dicha condición.
 
-  
+; La funcion condicion tiene que ser un predicado (devuelve T/nil).
+(defun sumatoriaCondicionada (lista condicion)
+  (cond
+   ((null lista) 0)
+   ((funcall condicion (first lista)) (+ 1 (sumatoriacondicionada (rest lista) condicion)))
+   (T (sumatoriaCondicionada (rest lista) condicion))))
 
+; 42) Escribir una funcion map
+(defun mapear (lista condicion)
+  (cond
+   ((null lista) nil)
+   (T (cons (funcall condicion (first lista)) (mapear (rest lista) condicion)))))
+
+; 43) Escriba una función llamada intercalar-según que tome dos listas y una función como entrada, y construya una nueva lista resultado de intercalar las dos primeras en el orden establecido por la función (es decir, que la función se aplica a los dos elementos que se comparan en cada momento para determinar cuál es el mayor).
+
+(defun ordenarMayorMenor (elem1 elem2)
+  (cond
+   ((<= elem1 elem2) 1)
+   (T -1)))
+
+(defun intercalar-segun (l1 l2 ordenar) ; Dominio: listas ordenadas con al menos 1 elemento y del mismo tamanio. El problema es como se establece el orden final?
+  (cond 
+   ((and (null l1) (not (null l2))) l2)
+   ((and (not (null l1)) (null l2)) l1)
+   ((and (null l1) (null l2)) nil)
+   ((= (funcall ordenar (first l1) (first l2)) 1) (cons (first l1) (cons (first l2) (intercalar-segun (rest l1) (rest l2) ordenar))))
+   ((= (funcall ordenar (first l1) (first l2)) -1) (cons (first l2) (cons (first l1) (intercalar-segun (rest l1) (rest l2) ordenar))))))
+
+ ; Para testear: (intercalar-segun '(1 3 5) '(4 5 6) (Lambda (e1 e2) (cond ((>= e1 e2) 1) (T -1))))
+; Si pruebo con (1 3 5) y (4 5 6) queda (1 4 3 5 5 6), como hago para que quede ordenado al final.
   
  
