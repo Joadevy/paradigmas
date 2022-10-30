@@ -243,7 +243,11 @@
 
 ; 23) Cantidad de numeros que contiene una lista
 ;(defun esNumero (elemento)
- ; Como se determina si un elemento es numero?
+(defun cantidadNumeros (lista)
+  (cond
+   ((null lista) 0)
+   ((NUMBERP (first lista)) (+ 1 (cantidadNumeros (rest lista))))
+   (T (cantidadNumeros (rest lista)))))
 
 ; 24) Funcion que transforma un numero binario (expresado como lista) a decimal.
 (defun reverso (lista)
@@ -288,6 +292,15 @@
 (defun esPalindromo (lista)
   (=Contenido lista (reverso lista)))
 
+
+; 39) Toma como parametro una lista y una funcion (condicion) y cuenta la cantidad que elementos de la lista que cumplen esa condicion.
+
+(defun cantidadDe (lista condicion)
+  (cond
+   ((null lista) 0)
+   ((funcall condicion (first lista)) (+ 1 (cantidadDe (rest lista) condicion)))
+   (T (cantidadDe (rest lista) condicion))))
+
 ; 40) Función que tome una lista de números y una condición (función) como parámetros y devuelva la sumatoria de los elementos que cumplen dicha condición.
 
 ; La funcion condicion tiene que ser un predicado (devuelve T/nil).
@@ -297,28 +310,32 @@
    ((funcall condicion (first lista)) (+ 1 (sumatoriacondicionada (rest lista) condicion)))
    (T (sumatoriaCondicionada (rest lista) condicion))))
 
-; 42) Escribir una funcion map
+; 41) Select => se aplica sobre una lista y devuelve otra lista con los elementos que cumplen una condicion.
+
+(defun select (lista condicion)
+  (cond
+   ((null lista) nil)
+   ((funcall condicion (first lista)) (cons (first lista) (select (rest lista) condicion)))
+   (T (select (rest lista) condicion))))
+
+; 42) Map => se aplica sobre una lista y devuelve una nueva lista con los resultados de aplicar la funcion que se le pasa como argumento en cada elemento.
 (defun mapear (lista condicion)
   (cond
    ((null lista) nil)
    (T (cons (funcall condicion (first lista)) (mapear (rest lista) condicion)))))
 
-; 43) Escriba una función llamada intercalar-según que tome dos listas y una función como entrada, y construya una nueva lista resultado de intercalar las dos primeras en el orden establecido por la función (es decir, que la función se aplica a los dos elementos que se comparan en cada momento para determinar cuál es el mayor).
+; 43) Toma dos listas y una función como entrada, devuelve una nueva lista resultado de intercalar las dos primeras en el orden establecido por la función (la función se aplica a los dos elementos que se comparan en cada momento para determinar cuál es el mayor).
 
-(defun ordenarMayorMenor (elem1 elem2)
-  (cond
-   ((<= elem1 elem2) 1)
-   (T -1)))
-
-(defun intercalar-segun (l1 l2 ordenar) ; Dominio: listas ordenadas con al menos 1 elemento y del mismo tamanio. El problema es como se establece el orden final?
+(defun intercalarSegun (l1 l2 ordenar) ; Dominio listas ordenadas.
   (cond 
    ((and (null l1) (not (null l2))) l2)
    ((and (not (null l1)) (null l2)) l1)
    ((and (null l1) (null l2)) nil)
-   ((= (funcall ordenar (first l1) (first l2)) 1) (cons (first l1) (cons (first l2) (intercalar-segun (rest l1) (rest l2) ordenar))))
-   ((= (funcall ordenar (first l1) (first l2)) -1) (cons (first l2) (cons (first l1) (intercalar-segun (rest l1) (rest l2) ordenar))))))
+   ((funcall ordenar (first l1) (first l2)) (cons (first l1) (intercalarSegun (rest l1) l2 ordenar)))
+   (T (cons (first l2) (intercalarSegun l1 (rest l2) ordenar)))))
 
- ; Para testear: (intercalar-segun '(1 3 5) '(4 5 6) (Lambda (e1 e2) (cond ((>= e1 e2) 1) (T -1))))
-; Si pruebo con (1 3 5) y (4 5 6) queda (1 4 3 5 5 6), como hago para que quede ordenado al final.
-  
+; Inputs test intercalarSegun: 
+; (intercalarSegun '(10 9 5 4) '(23 11 10 8 7 1) (Lambda (x y) (> x y)))
+; (intercalarSegun '(2 4 8) '(1 9) (lambda (x y) (< x y))) 
+
  
