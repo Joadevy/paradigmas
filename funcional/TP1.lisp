@@ -15,6 +15,9 @@
    (T (/ (* n (- n 1)) 2))))
 
 
+
+
+
 ; ------------------- NIVEL 2 -------------------
 
 ; 4) Enesima potencia de un numero (dominio pot es un num entero)
@@ -130,6 +133,10 @@
 (defun listaX2 (lista)
   (mapcar (lambda (x) (* x 2)) lista))
 
+
+
+
+
 ; ------------------- NIVEL 3 -------------------
 
 ; 19) Calculo del i-esimo numero perfecto (igual a la suma de sus divisores)
@@ -227,19 +234,24 @@
    ((= (repeticionesDe (first lista) lista) (repeticionesMaximaEn lista)) (first lista))
    (T (moda (eliminarOcurrenciasDe (first lista) lista)))))
 
- (defun moda2 (lista)
-  (cond 
-   ((null (rest lista)) (first lista))
-; Esta comparacion esta mal porque solo compara contra las repeticiones del elemento que sigue, no contra todas las otras.
-   ((> (repeticionesDe (first lista) lista) (repeticionesDe (first (eliminarOcurrenciasDe (first lista) lista)) (eliminarOcurrenciasDe (first lista) lista))) (first lista))
-   (T (moda2 (eliminarOcurrenciasDe (first lista) lista)))))
 
-; La moda se debe hacer similar al maximo:
-;(defun maximo (lista)
- ; (cond
-  ; ((null (rest lista)) (first lista))
-   ;((> (first lista) (maximo (rest lista))) (first lista))
-  ; (T (maximo (rest lista)))))
+; Moda bien hecho:
+(defun frecuenciaDe (numero lista)
+  (cond
+   ((null lista) 0)
+   ((= (first lista) numero) (+ 1 (frecuenciaDe numero (rest lista))))
+   (T (frecuenciaDe numero (rest lista)))))
+
+(defun adom (lista)
+  (cond
+   ((null (rest lista)) (first lista))
+   ((> (frecuenciaDe (first lista) lista) (frecuenciaDe (adom (rest lista)) (rest lista))) (first lista))
+   (T (adom (rest lista)))))
+
+
+
+
+
 
 ; 23) Cantidad de numeros que contiene una lista
 ;(defun esNumero (elemento)
@@ -293,6 +305,11 @@
   (=Contenido lista (reverso lista)))
 
 
+
+
+
+; ------------------- NIVEL 4 -------------------
+
 ; 39) Toma como parametro una lista y una funcion (condicion) y cuenta la cantidad que elementos de la lista que cumplen esa condicion.
 
 (defun cantidadDe (lista condicion)
@@ -328,9 +345,8 @@
 
 (defun intercalarSegun (l1 l2 ordenar) ; Dominio listas ordenadas.
   (cond 
-   ((and (null l1) (not (null l2))) l2)
-   ((and (not (null l1)) (null l2)) l1)
-   ((and (null l1) (null l2)) nil)
+   ((null l1) l2)
+   ((null l2) l1)
    ((funcall ordenar (first l1) (first l2)) (cons (first l1) (intercalarSegun (rest l1) l2 ordenar)))
    (T (cons (first l2) (intercalarSegun l1 (rest l2) ordenar)))))
 
@@ -338,4 +354,37 @@
 ; (intercalarSegun '(10 9 5 4) '(23 11 10 8 7 1) (Lambda (x y) (> x y)))
 ; (intercalarSegun '(2 4 8) '(1 9) (lambda (x y) (< x y))) 
 
- 
+
+
+; ------------------- NIVEL 5 -------------------
+
+; 44) Dada una lista de numeros y un numero N, devuelve la lista resultante de eliminar los N numeros mas cercanos al promedio de la lista.
+
+; Calcula la cercania entre un numero y un target
+(defun cercania (numero target)
+  (absDe (- target numero)))
+
+; Devuelve el elemento mas cercano al target.
+(defun elementoMasCercanoA (lista target)
+  (cond
+   ((null (rest lista)) (first lista))
+   ((< (cercania (first lista) target) (cercania (elementoMasCercanoA (rest lista) target) target)) (first lista))
+   (T (elementoMasCercanoA (rest lista) target))))
+
+; Elimina el elemento mas cercano al target.
+(defun eliminarMasCercanoA (lista target)
+  (cond
+   ((null lista) nil)
+   ((= (first lista) (elementoMasCercanoA lista target)) (rest lista))
+   (T (cons (first lista) (eliminarMasCercanoA (rest lista) target)))))
+
+(defun eliminar-N-CercanosA (lista N target) ; N < cantidad lista
+  (cond
+   ((= N 0) lista)
+   (T (eliminar-N-CercanosA (eliminarMasCercanoA lista target) (- N 1) target))))
+
+; Invoca el eliminar N cercanos pasandole la media de la lista como target.
+(defun eliminar-N-CercanosALaMedia (lista N)
+  (eliminar-N-CercanosA lista N (media lista)))
+
+
