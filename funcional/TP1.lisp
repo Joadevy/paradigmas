@@ -249,10 +249,6 @@
    (T (adom (rest lista)))))
 
 
-
-
-
-
 ; 23) Cantidad de numeros que contiene una lista
 ;(defun esNumero (elemento)
 (defun cantidadNumeros (lista)
@@ -306,8 +302,6 @@
 
 
 
-
-
 ; ------------------- NIVEL 4 -------------------
 
 ; 39) Toma como parametro una lista y una funcion (condicion) y cuenta la cantidad que elementos de la lista que cumplen esa condicion.
@@ -324,7 +318,7 @@
 (defun sumatoriaCondicionada (lista condicion)
   (cond
    ((null lista) 0)
-   ((funcall condicion (first lista)) (+ 1 (sumatoriacondicionada (rest lista) condicion)))
+   ((funcall condicion (first lista)) (+ (first lista) (sumatoriacondicionada (rest lista) condicion)))
    (T (sumatoriaCondicionada (rest lista) condicion))))
 
 ; 41) Select => se aplica sobre una lista y devuelve otra lista con los elementos que cumplen una condicion.
@@ -343,7 +337,7 @@
 
 ; 43) Toma dos listas y una función como entrada, devuelve una nueva lista resultado de intercalar las dos primeras en el orden establecido por la función (la función se aplica a los dos elementos que se comparan en cada momento para determinar cuál es el mayor).
 
-(defun intercalarSegun (l1 l2 ordenar) ; Dominio listas ordenadas.
+(defun intercalarSegun (l1 l2 ordenar) ; Dominio listas ordenadas segun el mismo criterio de la funcion ordenar.
   (cond 
    ((null l1) l2)
    ((null l2) l1)
@@ -360,15 +354,15 @@
 
 ; 44) Dada una lista de numeros y un numero N, devuelve la lista resultante de eliminar los N numeros mas cercanos al promedio de la lista.
 
-; Calcula la cercania entre un numero y un target
-(defun cercania (numero target)
+; Calcula la distancia (cercania) entre un numero y un target
+(defun distancia (numero target)
   (absDe (- target numero)))
 
 ; Devuelve el elemento mas cercano al target.
 (defun elementoMasCercanoA (lista target)
   (cond
    ((null (rest lista)) (first lista))
-   ((< (cercania (first lista) target) (cercania (elementoMasCercanoA (rest lista) target) target)) (first lista))
+   ((< (distancia (first lista) target) (distancia (elementoMasCercanoA (rest lista) target) target)) (first lista))
    (T (elementoMasCercanoA (rest lista) target))))
 
 ; Elimina el elemento mas cercano al target.
@@ -378,13 +372,42 @@
    ((= (first lista) (elementoMasCercanoA lista target)) (rest lista))
    (T (cons (first lista) (eliminarMasCercanoA (rest lista) target)))))
 
+; Elimina los N elementos mas cercanos al target
 (defun eliminar-N-CercanosA (lista N target) ; N < cantidad lista
   (cond
    ((= N 0) lista)
    (T (eliminar-N-CercanosA (eliminarMasCercanoA lista target) (- N 1) target))))
 
-; Invoca el eliminar N cercanos pasandole la media de la lista como target.
+; Invoca el eliminar N cercanos pasandole la media de la lista como target para mantener la media de la lista como una constante.
 (defun eliminar-N-CercanosALaMedia (lista N)
   (eliminar-N-CercanosA lista N (media lista)))
+
+
+; Nivel 5.2
+
+; 60) Escriba una función que tome como entrada una lista L y un elemento N, y determine la Profundidad de la primera ocurrencia del elemento en la lista. Si el número no existe, su profundidad es 0; si está en el primer nivel es 1, y así sucesivamente.
+; Probando con elemento 1:
+; (2 3 '(2 3 4 1)) => profundidad 2.
+; (2 3) => prof 0
+; (1 2 3) => prof 1
+
+; Devuelve T si el elemento existe en la lista (o dentro de una sublista)
+(defun existeElemento (elemento lista)
+  (cond
+   ((null lista) nil)
+   ((listp (first lista)) (or (existeElemento elemento (first lista)) (existeElemento elemento (rest lista))))
+   ((= elemento (first lista)) T)
+   (T (existeElemento elemento (rest lista)))))
+
+(defun profundidadDe (elemento lista)
+  (cond
+   ((null lista) 0)
+   ((listP (first lista)) (cond 
+                           ((existeElemento elemento (first lista)) (+ 1 (profundidadDe elemento (first lista))))
+                           (T (profundidadDe elemento (rest lista)))))
+   ((= elemento (first lista)) 1)
+   (T (profundidadDe elemento (rest lista)))))
+
+
 
 
