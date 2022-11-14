@@ -18,7 +18,7 @@ descendiente(Hijo, Padre):- padre_hijo(Padre,Hijo).
 factorial(0,1).
 factorial(N,F):- N>0, N1 is N-1, factorial(N1,F1), F is N*F1.
 
-% Nivel 1
+% ------------------ Nivel 1
 
 % 1) Tendremos dos parametros, el primero representa el elemento a calcular el cuadrado y el segundo el cuadrado en si.
 cuadrado(X,Y):- Y is X*X. % En lenguaje natural decimos que 'Y es cuadrado de X si Y es X*X'
@@ -29,6 +29,8 @@ valorAbs(X,X) :- X>=0.
 % 3) Realiza el calculo n: F(n) = n * (n - 1) / 2.
 calculo3(X,Y):- Y is X*(X-1)/2.
 
+
+% ------------------ Nivel 2
 % 4) N pot de un numero
 nPot(_,0,Z):- Z is 1.
 nPot(X,Y,Z):- Y>0, Y1 is Y-1, nPot(X,Y1,Z1), Z is Z1*X.
@@ -73,6 +75,33 @@ sum1eras3Pot(Numero,Sumatoria):- cuadrado(Numero,N2), N3 is Numero*N2, Sumatoria
 eliminarOcurrencias(_,[],[]).
 eliminarOcurrencias(Elem,[Elem|R],L1):- eliminarOcurrencias(R,Elem,L1).
 eliminarOcurrencias(Elem,[P|R],[P|L1]):- P\=Elem, eliminarOcurrencias(R,Elem,L1).
+
+% 15) Reemplaza un elemento de una lista por otro.
+reemplazar(_,_,[],[]).
+reemplazar(Old, New,[P|R],[P|Res]):- P\=Old, reemplazar(Old, New,R,Res).
+reemplazar(Old, New, [Old|R], [New|Res]):-reemplazar(Old, New, R, Res).
+
+% 16) Minimo elemento de una lista
+minimo([P|[]],P).
+minimo([P|R],P):- minimo(R,S), P=<S.
+minimo([P|R],S):- minimo(R,S), P>S.
+
+% 17) Maximo elemento de una lista.
+maximo([P|[]],P).
+maximo([P|R],P):- maximo(R,S), P>=S.
+maximo([P|R],S):- maximo(R,S), P<S.
+
+% 18) Devuelve una 3-upla con promedio, maximo y minimo de una lista.
+promMaxMin(L,[Prom,Max,Min]):- minimo(L,Min), maximo(L,Max), media(L,Prom).
+
+% ------------------Nivel 3
+
+% 19) Calcule el i-esimo numero perfecto.
+
+% Uso un predicado que encuentre los divisores de un numero.
+divisores(N,[1|R]):- Div>=1, Div \= N, D2 is Div+1,  divisores(N,R).
+
+
 
 
 
