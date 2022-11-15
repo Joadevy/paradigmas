@@ -94,12 +94,31 @@ maximo([P|R],S):- maximo(R,S), P<S.
 % 18) Devuelve una 3-upla con promedio, maximo y minimo de una lista.
 promMaxMin(L,[Prom,Max,Min]):- minimo(L,Min), maximo(L,Max), media(L,Prom).
 
-% ------------------Nivel 3
+% ------------------ Nivel 3
 
 % 19) Calcule el i-esimo numero perfecto.
 
 % Uso un predicado que encuentre los divisores de un numero.
-divisores(N,[1|R]):- Div>=1, Div \= N, D2 is Div+1,  divisores(N,R).
+divisor(N,D):- D\=N, D>1, R is mod(N,D), R is 0. % Regla divisor para un perfecto.
+
+divisores(N,N,[]).
+divisores(N,D,[D|R]):- D<N, divisor(N,D), D1 is D+1, divisores(N,D1,R).
+divisores(N,D,R):- D<N, D1 is D+1, not(divisor(N,D)),divisores(N,D1,R).
+
+% 21) Calculo de la varianza de una lista de numeros.
+varianza(L,Var):- media(L,M), cantidad(L,C), varianzaDe(L,M,C,Var).
+
+varianzaDe([],_,_,0).
+varianzaDe([P|R],M,C,Var):-  varianzaDe(R,M,C,VarR), Var is (((P-M)^2)/(C-1)) + VarR.
+
+% 22) Moda de una lista de numeros
+cantidadRepeticionesDe(_,[],0).
+cantidadRepeticionesDe(E,[E|R],Cant):- cantidadRepeticionesDe(E,R,C1), Cant is 1+C1. 
+cantidadRepeticionesDe(E,[P|R],Cant):- P\=E, cantidadRepeticionesDe(E,R,Cant).
+
+moda([P],P).
+moda([P,S|R],P):- cantidadRepeticionesDe(P,[P,S|R],C1), cantidadRepeticionesDe(S,[S|R],C2), C1 >= C2.
+moda([P,S|R],S):- cantidadRepeticionesDe(P,[P,S|R],C1), cantidadRepeticionesDe(S,[S|R],C2), C1 < C2.
 
 
 
