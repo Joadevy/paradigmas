@@ -97,13 +97,45 @@ promMaxMin(L,[Prom,Max,Min]):- minimo(L,Min), maximo(L,Max), media(L,Prom).
 % ------------------ Nivel 3
 
 % 19) Calcule el i-esimo numero perfecto.
+% Regla si un numero D es divisor de N.
+divisor(N,D):- D\=N, D>=1, R is mod(N,D), R is 0.
 
-% Uso un predicado que encuentre los divisores de un numero.
-divisor(N,D):- D\=N, D>1, R is mod(N,D), R is 0. % Regla divisor para un perfecto.
+% Divisores desde para usarse en el calculo de los divisores de un numero.
+divisoresPerfectoDesde(N,N,[]).
+divisoresPerfectoDesde(N,D,[D|R]):- D<N, divisor(N,D), D1 is D+1, divisoresPerfectoDesde(N,D1,R).
+divisoresPerfectoDesde(N,D,R):- D<N, D1 is D+1, not(divisor(N,D)),divisoresPerfectoDesde(N,D1,R).
 
-divisores(N,N,[]).
-divisores(N,D,[D|R]):- D<N, divisor(N,D), D1 is D+1, divisores(N,D1,R).
-divisores(N,D,R):- D<N, D1 is D+1, not(divisor(N,D)),divisores(N,D1,R).
+% Regla divisores para un perfecto.
+divisoresPerfecto(N,R):-divisoresPerfectoDesde(N,1,R).
+
+% Regla que determina si un numero es perfecto o no.
+esPerfecto(N):- divisoresPerfecto(N,D), sumL(D,Sum), Sum==N.
+
+% Predcado aux que calcula n perfectos desde el valor D.
+nPerfectosDesde(0,_,[]).
+nPerfectosDesde(N,D,[D|RP]):-N>0, esPerfecto(D), N1 is N-1, D1 is D+1, nPerfectosDesde(N1,D1,RP).
+nPerfectosDesde(N,D,RP):-N>0, not(esPerfecto(D)), D1 is D+1, nPerfectosDesde(N,D1,RP).
+
+% Predicado general que consulta los perfectos empezando desde el 1.
+nPerfectos(N,R):- nPerfectosDesde(N,1,R).
+
+% 20) N primeros numeros primos
+
+% Predicado divisores de un numero N desde D.
+divisoresDesde(N,N,[N]).
+divisoresDesde(N,D,[D|R]):- D<N, divisor(N,D), D1 is D+1, divisoresDesde(N,D1,R).
+divisoresDesde(N,D,R):- D<N, D1 is D+1, not(divisor(N,D)),divisoresDesde(N,D1,R).
+
+% Regla divisores para un numero N.
+divisores(N,R):-divisoresDesde(N,1,R).
+
+esPrimo(N):-divisores(N,[P,S|R]), P==1, S==N.
+
+nPrimosDesde(0,D,[]).
+nPrimosDesde(N,D,[D|PR]):-N>0, esPrimo(D), D1 is D+1, N1 is N-1, nPrimosDesde(N1,D1,PR).
+nPrimosDesde(N,D,PR):-N>0, not(esPrimo(D)), D1 is D+1,nPrimosDesde(N,D1,PR).
+
+nPrimos(N,P):- nPrimosDesde(N,1,P).
 
 % 21) Calculo de la varianza de una lista de numeros.
 varianza(L,Var):- media(L,M), cantidad(L,C), varianzaDe(L,M,C,Var).
@@ -117,10 +149,29 @@ cantidadRepeticionesDe(E,[E|R],Cant):- cantidadRepeticionesDe(E,R,C1), Cant is 1
 cantidadRepeticionesDe(E,[P|R],Cant):- P\=E, cantidadRepeticionesDe(E,R,Cant).
 
 moda([P],P).
-moda([P,S|R],P):- cantidadRepeticionesDe(P,[P,S|R],C1), cantidadRepeticionesDe(S,[S|R],C2), C1 >= C2.
-moda([P,S|R],S):- cantidadRepeticionesDe(P,[P,S|R],C1), cantidadRepeticionesDe(S,[S|R],C2), C1 < C2.
+moda([P,S|R],P):- cantidadRepeticionesDe(P,[P,S|R],C1), moda([S|R],MR), cantidadRepeticionesDe(MR,[S|R],C2), C1 >= C2.
+moda([P,S|R],MR):- cantidadRepeticionesDe(P,[P,S|R],C1), moda([S|R],MR), cantidadRepeticionesDe(MR,[S|R],C2), C1 < C2.
 
+% Otra forma menos eficiente:
+% moda([P],P).
+% moda([P,S|R],M):- cantidadRepeticionesDe(P,[P,S|R],C1), cantidadRepeticionesDe(S,[S|R],C2), C1 >= C2, moda([P|R],M).
+% moda([P,S|R],M):- cantidadRepeticionesDe(P,[P,S|R],C1), cantidadRepeticionesDe(S,[S|R],C2), C1 < C2, moda([S|R],M).
 
+% 23) Cantidad de numeros que contiene una lista, uso el predicado number(5) => True, number('5')=> False
+cantidadNumeros([],0).
+cantidadNumeros([P|R],C):- number(P), cantidadNumeros(R,CR), C is 1+CR.
+cantidadNumeros([P|R],C):- not(number(P)), cantidadNumeros(R,C).
+
+% 27) Determina si una lista es un palindromo (chequea si la lista es igual al reverso de la lista, uso el predicado REVERSE).
+esIgual(E,E).
+
+% Controla si la lista L es igual a su reverso RL.
+esPalindromo([P|R],RL,Cant):- iesimo(RL,Cant,UR) ,esIgual(P,UR), eliminar(RL,Cant,RL1), C1 is Cant-1, esPalindromo(R,RL1,C1).
+esPalindromo([],[],0).
+
+palindromo(L,RL):- cantidad(L,C), reverse(L,RL), esPalindromo(L,RL,C).
+
+% 
 
 
 
