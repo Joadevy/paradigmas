@@ -312,7 +312,7 @@
    ((funcall condicion (first lista)) (+ 1 (cantidadDe (rest lista) condicion)))
    (T (cantidadDe (rest lista) condicion))))
 
-; 40) Función que tome una lista de números y una condición (función) como parámetros y devuelva la sumatoria de los elementos que cumplen dicha condición.
+; 40) Funciï¿½n que tome una lista de nï¿½meros y una condiciï¿½n (funciï¿½n) como parï¿½metros y devuelva la sumatoria de los elementos que cumplen dicha condiciï¿½n.
 
 ; La funcion condicion tiene que ser un predicado (devuelve T/nil).
 (defun sumatoriaCondicionada (lista condicion)
@@ -335,7 +335,7 @@
    ((null lista) nil)
    (T (cons (funcall condicion (first lista)) (mapear (rest lista) condicion)))))
 
-; 43) Toma dos listas y una función como entrada, devuelve una nueva lista resultado de intercalar las dos primeras en el orden establecido por la función (la función se aplica a los dos elementos que se comparan en cada momento para determinar cuál es el mayor).
+; 43) Toma dos listas y una funciï¿½n como entrada, devuelve una nueva lista resultado de intercalar las dos primeras en el orden establecido por la funciï¿½n (la funciï¿½n se aplica a los dos elementos que se comparan en cada momento para determinar cuï¿½l es el mayor).
 
 (defun intercalarSegun (l1 l2 ordenar) ; Dominio listas ordenadas segun el mismo criterio de la funcion ordenar.
   (cond 
@@ -423,7 +423,7 @@
   (and (<= elemento (maximo rango)) (>= elemento (minimo rango))))
 
 
-; 60) Escriba una función que tome como entrada una lista L y un elemento N, y determine la Profundidad de la primera ocurrencia del elemento en la lista. Si el número no existe, su profundidad es 0; si está en el primer nivel es 1, y así sucesivamente.
+; 60) Escriba una funciï¿½n que tome como entrada una lista L y un elemento N, y determine la Profundidad de la primera ocurrencia del elemento en la lista. Si el nï¿½mero no existe, su profundidad es 0; si estï¿½ en el primer nivel es 1, y asï¿½ sucesivamente.
 ; Probando con elemento 1:
 ; (2 3 '(2 3 4 1)) => profundidad 2.
 ; (2 3) => prof 0
@@ -459,7 +459,7 @@
 
 ; Ejercicios de parcial
 
-; Escriba la función (predicado) que tome como entrada una lista L de pares ordenados y una lista M de números, y devuelva otra lista Resultado que contenga una sublista por cada par, conteniendo los elementos de la segunda lista que están dentro del rango representado por dicho par.
+; Escriba la funciï¿½n (predicado) que tome como entrada una lista L de pares ordenados y una lista M de nï¿½meros, y devuelva otra lista Resultado que contenga una sublista por cada par, conteniendo los elementos de la segunda lista que estï¿½n dentro del rango representado por dicho par.
 ; Ejemplo: L=((3 5) (2 4) (1 2)) y M=(2 8 3 1 2 2 9 1 4) Resultado: ((3 4) (2 3 2 2 4) (2 1 2 2 1))
 
 (defun estaEnElRango (numero rango)
@@ -480,7 +480,7 @@
 
 
 
-; Escriba una función (predicado) que tome como entrada una lista L (sin sublistas) y una lista M (que puede contener sublistas), y  devuelva una lista con N sublistas, donde N es la cantidad de elementos de L. Cada sublista debe contener todas las posiciones del i-esimo elemento de L en M (como si M fuese lineal. Además, si el elemento no existe se pondrá 0).
+; Escriba una funciï¿½n (predicado) que tome como entrada una lista L (sin sublistas) y una lista M (que puede contener sublistas), y  devuelva una lista con N sublistas, donde N es la cantidad de elementos de L. Cada sublista debe contener todas las posiciones del i-esimo elemento de L en M (como si M fuese lineal. Ademï¿½s, si el elemento no existe se pondrï¿½ 0).
 
 ;Ejemplo: L=(6 3 2 4 8) M=(2 (5 4 7 7) 5 (3 (4 9) 10) 6 (5 7) 4 9 2)
 ;Resultado: ((11) (7) (1 16) (3 8 14) (0))
