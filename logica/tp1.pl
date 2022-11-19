@@ -37,7 +37,7 @@ nPot(X,Y,Z):- Y>0, Y1 is Y-1, nPot(X,Y1,Z1), Z is Z1*X.
 
 % 5) Cantidad de elementos de una lista
 cantidad([],0).
-cantidad([_|T],N):- cantidad(T,N1), N is N1+1.
+cantidad([_|R],C):- cantidad(R,CR), C is CR+1.
 
 % 6) Sumatoria elementos lista
 sumL([],0).
@@ -129,9 +129,9 @@ divisoresDesde(N,D,R):- D<N, D1 is D+1, not(divisor(N,D)),divisoresDesde(N,D1,R)
 % Regla divisores para un numero N.
 divisores(N,R):-divisoresDesde(N,1,R).
 
-esPrimo(N):-divisores(N,[P,S|R]), P==1, S==N.
+esPrimo(N):-divisores(N,[P,S|_]), P==1, S==N.
 
-nPrimosDesde(0,D,[]).
+nPrimosDesde(0,_,[]).
 nPrimosDesde(N,D,[D|PR]):-N>0, esPrimo(D), D1 is D+1, N1 is N-1, nPrimosDesde(N1,D1,PR).
 nPrimosDesde(N,D,PR):-N>0, not(esPrimo(D)), D1 is D+1,nPrimosDesde(N,D1,PR).
 
@@ -171,8 +171,40 @@ esPalindromo([],[],0).
 
 palindromo(L,RL):- cantidad(L,C), reverse(L,RL), esPalindromo(L,RL,C).
 
-% 
+% ------------------ Nivel 5
 
+% 52) Determina la cantidad de listas que que contiene una lista (incluyendo principal).
+cantidadSL([],0).
+cantidadSL([P|R],C):-is_list(P), cantidadSL(P,CP), C1 is 1+CP, cantidadSL(R,CR), C is C1+CR.
+cantidadSL([P|R],C):- not(is_list(P)), cantidadSL(R,C).
+
+cantidadL(L,C):- cantidadSL(L,CL), C is 1 + CL.
+
+% 54) Transformacion de una lista en una lista lineal.
+% [1,2,3,[4,5,6]] => [1,2,3,4,5,6]
+listaLineal([],[]).
+listaLineal([P|R],[P|LR]):- not(is_list(P)), listaLineal(R,LR).
+listaLineal([P|R],LL):- is_list(P), listaLineal(P,LP), listaLineal(R,LR), append(LP,LR,LL).
+
+% 57) Cantidad de numeros en una lista con sublistas
+
+% [1,2,3,'a',[4,5,6]]
+cantidadNumerosL(L,C):- listaLineal(L,LL), cantidadNumerosLL(LL,C).
+
+% [1,2,3,'a',4,5,6]
+cantidadNumerosLL([],0).
+cantidadNumerosLL([P|R],C):- number(P), cantidadNumerosLL(R,CR), C is CR+1.
+cantidadNumerosLL([P|R],C):- not(number(P)), cantidadNumerosLL(R,C).
+
+% Sin llamar a listaLinealiza
+cantidadNumerosLSL([],0).
+cantidadNumerosLSL([P|R],C):- not(is_list(P)), number(P),cantidadNumerosLSL(R,CR), C is 1+CR.
+cantidadNumerosLSL([P|R],C):- is_list(P), cantidadNumerosLSL(P,CP), cantidadNumerosLSL(R,CR), C is CP+CR.
+cantidadNumerosLSL([P|R],C):- not(is_list(P)), not(number(P)),cantidadNumerosLSL(R,C).
+
+% 58) Calcula media de una lista con sublistas.
+% Primero linealiza la lista y le calcula la media a esa lista una vez linealizada.
+mediaL(L,ML):- listaLineal(L,LL), media(LL,ML).
 
 
 
