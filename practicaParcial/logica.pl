@@ -78,10 +78,46 @@ cantSL([P|R],CSL):-is_list(P),cantSL(P,CSLP),cantSL(R,CSLR), CSL is 1 + CSLP + C
 cantSL([P|R],CSL):-not(is_list(P)),cantSL(R,CSL).
 
 % Lista con mayor cantidad de elementos, incluye sublistas (y no cuentan como elemento)
-
 contieneSL([P|_]):- is_list(P).
 contieneSL([P|R]):- not(is_list(P)), contieneSL(R).
 
 linealiza([],[]).
 linealiza([P|R],LL):-is_list(P),linealiza(P,LP), linealiza(R,LR), append(LP,LR,LL).
 linealiza([P|R],[P|LR]):-not(is_list(P)),linealiza(R,LR).
+
+cantSinSL([],0).
+cantSinSL([P|R],C):- not(is_list(P)), cantSinSL(R,CR), C is 1+CR.
+cantSinSL([P|R],C):- is_list(P), cantSinSL(R,C).
+
+mayorCantEl(L,C):- not(contieneSL(L)), cantSinSL(L,C).
+mayorCantEl([P|R],C):-not(is_list(P)), contieneSL([P|R]), cantSinSL([P|R],C), mayorCantEl(R,CR), C >= CR.
+mayorCantEl([P|R],C):-contieneSL([P|R]), is_list(P), cantSinSL([P|R],C), mayorCantEl(R,CR), C >= CR, mayorCantEl(P,CP), C >= CP.
+mayorCantEl([P|R],CP):-contieneSL([P|R]), is_list(P), cantSinSL([P|R],C), mayorCantEl(R,CR), C >= CR, mayorCantEl(P,CP), C < CP.
+mayorCantEl([P|R],CR):-not(is_list(P)), contieneSL([P|R]), cantSinSL([P|R],C), mayorCantEl(R,CR1), C < CR1, mayorCantEl(R,CR).
+
+sublistaConCant([P|R],C,[P|R]):-cantSinSL([P|R],C).
+sublistaConCant([P|_],C,P):-is_list(P),cantSinSL(P,C).
+sublistaConCant([P|_],C,S):-is_list(P),cantSinSL(P,X), X\=C, contieneSL(P), sublistaConCant(P,C,S).
+sublistaConCant([P|R],C,S):-is_list(P),cantSinSL(P,X), X\=C, not(contieneSL(P)), sublistaConCant(R,C,S).
+sublistaConCant([P|R],C,S):-not(is_list(P)), sublistaConCant(R,C,S).
+
+listaSinSL([],[]).
+listaSinSL([P|R],S):- is_list(P), listaSinSL(R,S).
+listaSinSL([P|R],[P|S]):- not(is_list(P)), listaSinSL(R,S).
+
+listamayor([],[]).
+listamayor([P|R],L):- mayorCantEl([P|R],MC), sublistaConCant([P|R],MC,LMC), listaSinSL(LMC,L).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
