@@ -73,7 +73,15 @@ soloSL([P|R],[P,SLR]):-is_list(P), soloSL(R,SLR), SLR\=[].
 soloSL([P|R],P):-is_list(P), soloSL(R,SLR), SLR==[].
 soloSL([P|R],SSL):-not(is_list(P)),soloSL(R,SSL).
 
-
 cantSL([],0).
 cantSL([P|R],CSL):-is_list(P),cantSL(P,CSLP),cantSL(R,CSLR), CSL is 1 + CSLP + CSLR.
 cantSL([P|R],CSL):-not(is_list(P)),cantSL(R,CSL).
+
+% Lista con mayor cantidad de elementos, incluye sublistas (y no cuentan como elemento)
+
+contieneSL([P|_]):- is_list(P).
+contieneSL([P|R]):- not(is_list(P)), contieneSL(R).
+
+linealiza([],[]).
+linealiza([P|R],LL):-is_list(P),linealiza(P,LP), linealiza(R,LR), append(LP,LR,LL).
+linealiza([P|R],[P|LR]):-not(is_list(P)),linealiza(R,LR).
