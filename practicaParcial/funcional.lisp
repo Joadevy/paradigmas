@@ -24,7 +24,7 @@
    ((<= (first lista) (minimo (rest lista))) (first lista))
    (T (minimo (rest lista)))))
 
-; No cuenta la lista principal
+; Determina si una lista tiene o no sublitas.
 (defun sinSL (lista)
   (cond
    ((null lista) T)
@@ -73,7 +73,7 @@
 (defun listaMax (lista cant)
   (cond
    ((null lista) nil)
-   ((and (listp (first lista)) (= (cantSinSL (first lista)) cant)) (first lista))
+   ((listp (first lista)) (listaMax (first lista) cant))
    ((= (cantSinSL lista) cant) lista)
    (T (listaMax (rest lista) cant))))
 
