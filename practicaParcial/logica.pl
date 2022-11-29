@@ -146,7 +146,28 @@ listaNumericaSinSL([P|R],RSSL):-not(number(P)),listaNumericaSinSL(R,RSSL).
 
 listaMaxSumatoria(L,LM):-is_list(L), maxSumatoria(L,MS), listaPorSumatoria(L,MS,LM).
 
+% Escriba una función/predicado que tome una lista L donde todos sus elementos 
+% son sublistas de números ordenados de menor a mayor (sin sublistas) 
+% y devuelva la lista resultante de intercalar dichas sublistas, es decir,
+% el resultado será una lista ordenada.
+% L=((4 9 13) (3) (1 2 5 8 8 11) () (7 24)) , el resultado es (1 2 3 4 5 7 8 8 9 11 13 24) 
 
+fusionListasEnOrden(L,[],L):- is_list(L).
+fusionListasEnOrden([],L,L):- is_list(L).
+fusionListasEnOrden([P1|R1],[P2|R2],[P1|R3]):- P1=<P2, fusionListasEnOrden(R1,[P2|R2],R3).
+fusionListasEnOrden([P1|R1],[P2|R2],[P2|R3]):- P1>P2, fusionListasEnOrden([P1|R1],R2,R3).
+
+% Se busca la cantidad para saber si es par ya que no funciona sino (el SL seria [] y no 
+% lo toma como elemento)
+cantidadElementos([],0).
+cantidadElementos([_|R],C):- cantidadElementos(R,CR), C is 1 + CR.
+
+cantidadPar(L):-is_list(L), cantidadElementos(L,CL), 0 is mod(CL,2).
+
+% Las condiciones de que sean listas no seria necesario porque deben serlo.
+ordenaListaConSL([],[]).
+ordenaListaConSL(L,F):- not(cantidadPar(L)), append(L,[[]],LP) , ordenaListaConSL(LP,F).
+ordenaListaConSL([PL,SL|R],F):-cantidadPar([PL,SL|R]), is_list(PL), is_list(SL), fusionListasEnOrden(PL,SL,FL), ordenaListaConSL(R,FR), fusionListasEnOrden(FL,FR,F).
 
 
 
