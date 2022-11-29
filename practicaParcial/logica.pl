@@ -156,4 +156,3 @@ listaMaxSumatoria(L,LM):-is_list(L), maxSumatoria(L,MS), listaPorSumatoria(L,MS,
 
 
 
-

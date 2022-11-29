@@ -142,6 +142,20 @@
 
 ; L=((4 9 13) (3) (1 2 5 8 8 11) () (7 24)) , el resultado es (1 2 3 4 5 7 8 8 9 11 13 24) 
 
+; Ire tomando de a dos listas y fusionandolas en orden.
+(defun fusionListasSegunOrden (l1 l2)
+  (cond
+   ((null l1) l2)
+   ((null l2) l1)
+   ((<= (first l1) (first l2)) (cons (first l1) (fusionListasSegunOrden (rest l1) l2)))
+   (T (cons (first l2) (fusionListasSegunOrden l1 (rest l2))))))
+
+(defun ordenaListaConSL (lista)
+  (cond
+   ((null lista) nil)
+   (T (fusionListasSegunOrden (fusionListasSegunOrden (first lista) (first (rest lista))) (ordenaListaConSL (rest (rest lista)))))))
+
+; Otra estrategia: linealizar la lista y luego ordenarla de menor a mayor.
 (defun linealizaLista (lista)
   (cond
    ((null lista) lista)
