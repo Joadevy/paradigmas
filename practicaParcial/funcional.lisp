@@ -103,5 +103,29 @@
 (defun sumatoriaLista (L N)
   (cond
    ((< (- (largo L) N) 0) nil)
-   ((null L) L)
    (T (cons (sumatoriaDesdeHasta L 1 N 1) (sumatoriaLista (rest L) N)))))
+
+ ;10.Escriba una función/predicado que tome como entrada una lista con sublistas y devuelva la sublista cuya sumatoria (considerando sólo los elementos numéricos) sea la máxima.
+;Ej: L=(5 (9 ((3 7 4)  5  (6 (15 3)) 4) 10) 9 1), el resultado es (9 10)
+
+(defun numerosDelNivel (lista)
+  (cond
+   ((null lista) lista)
+   ((numberp (first lista)) (cons (first lista) (numerosDelNivel (rest lista))))
+   (T (numerosDelNivel (rest lista)))))
+
+(defun sumatoriaN (lista)
+  (cond
+   ((null (rest lista)) (first lista))
+   (T (+ (first lista) (sumatoriaN (rest lista))))))
+
+; Tengo que buscar la sumatoria mas grande en las sublistas y despues recorro y la que coincida con ese valor la muestro SIN LAS SUBLISTAS del medio.
+
+(defun maximaSumatoria (lista)
+  (cond
+   ((null (rest lista)) (sumatoriaN (numerosDelNivel lista))) ; esta condicion no debe ir, pero para test.
+   ((>= (sumatoriaN (numerosDelNivel lista)) (maximaSumatoria (rest lista))) (sumatoriaN (numerosDelNivel lista)))
+   ((and (listp (first lista)) (>= (sumatoriaN (numerosDelNivel (first lista))) (sumatoriaN (numerosDelNivel (rest lista)))) (>= (sumatoriaN (numerosDelNivel (first lista))) (maximaSumatoria (first lista)))) (sumatoriaN (numerosDelNivel (first lista))))
+; Esta condicion no estoy seguro, es si dentro de la lista hay uno que sea mayor
+   ((and (listp (first lista)) (>= (sumatoriaN (numerosDelNivel (first lista))) (sumatoriaN (numerosDelNivel (rest lista)))) (< (sumatoriaN (numerosDelNivel (first lista))) (maximaSumatoria (first lista)))) (maximaSumatoria (numerosDelNivel (first lista))))
+   (T (maximaSumatoria (rest lista)))))
