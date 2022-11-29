@@ -121,6 +121,33 @@ sumatoriaHasta([P|R],N,S):- N>0, N1 is N-1, sumatoriaHasta(R,N1,SR), S is P + SR
 sumatoriasDeAN([P|R],N,[S1|S2]):- largo([P|R],L), L>=N, sumatoriaHasta([P|R],N,S1), sumatoriasDeAN(R,N,S2).
 sumatoriasDeAN([P|R],N,[]):- largo([P|R],L), L<N.
 
+% Encontrar la lista con mayor sumatoria de sus elementos numericos dentro de una lista.
+% Ej: L=(5 (9 ((3 7 4)  5  (6 (15 3)) 4) 10) 9 1), el resultado es (9 10)
+
+sumN([],0).
+sumN([P|R],S):- number(P), sumN(R,SR), S is P + SR.
+sumN([P|R],S):- not(number(P)), sumN(R,S).
+
+maxSumatoria([],0).
+maxSumatoria([P|R],SPR):- sumN([P|R],SPR), maxSumatoria(R,SR), SPR > SR.
+maxSumatoria([P|R],SR):- sumN([P|R],SPR), maxSumatoria(R,SR), SPR < SR.
+maxSumatoria([P|R],SP):- is_list(P), sumN(P,SP), maxSumatoria(R,SR), SP >= SR, maxSumatoria(P,MSP), SP >= MSP.
+maxSumatoria([P|R],MSP):- is_list(P), sumN(P,SP), maxSumatoria(R,SR), SP >= SR, maxSumatoria(P,MSP), SP < MSP.
+maxSumatoria([P|R],SR):- is_list(P), sumN(P,SP), maxSumatoria(R,SR), SP < SR.
+
+listaPorSumatoria(L,S,LSSL):- is_list(L), sumN(L,S), listaNumericaSinSL(L,LSSL).
+listaPorSumatoria([P|_],S,PSSL):- is_list(P), sumN(P,S), listaNumericaSinSL(P,PSSL).
+listaPorSumatoria([P|R],S,L):- is_list(P), sumN(P,X), X\=S, listaPorSumatoria(R,S,L).
+listaPorSumatoria([P|R],S,L):- not(is_list(P)), listaPorSumatoria(R,S,L).
+
+listaNumericaSinSL([],[]).
+listaNumericaSinSL([P|R],[P|RSSL]):-number(P),listaNumericaSinSL(R,RSSL).
+listaNumericaSinSL([P|R],RSSL):-not(number(P)),listaNumericaSinSL(R,RSSL).
+
+listaMaxSumatoria(L,LM):-is_list(L), maxSumatoria(L,MS), listaPorSumatoria(L,MS,LM).
+
+
+
 
 
 
