@@ -109,8 +109,17 @@ listamayor([],[]).
 listamayor([P|R],L):- mayorCantEl([P|R],MC), sublistaConCant([P|R],MC,LMC), listaSinSL(LMC,L).
 
 
+% Ej: para L=(5 3 7 5 4 4 8 9) y N=3, el resultado es (15 15 16 13 16 21)
 
+% (1 2 3 4) N = 2 => 1 + (2 3 4) N = 1 => 1 + 2 (3 4) N = 0.
+largo([],0).
+largo([_|R],C):- largo(R,LR), C is 1+LR.
 
+sumatoriaHasta(_,0,0).
+sumatoriaHasta([P|R],N,S):- N>0, N1 is N-1, sumatoriaHasta(R,N1,SR), S is P + SR.
+
+sumatoriasDeAN([P|R],N,[S1|S2]):- largo([P|R],L), L>=N, sumatoriaHasta([P|R],N,S1), sumatoriasDeAN(R,N,S2).
+sumatoriasDeAN([P|R],N,[]):- largo([P|R],L), L<N.
 
 
 
