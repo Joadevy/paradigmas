@@ -130,13 +130,58 @@
    (T (maximaSumatoria (rest lista)))))
 
 (defun devuelveListaMaxSum (lista maxSum) 
-  (condb
+  (cond
    ((= (sumatoriaN (numerosDelNivel lista)) maxSum) (numerosDelNivel lista))
    ((listp (first lista)) (devuelveListaMaxSum (first lista) maxSum))
    (T (devuelveListaMaxSum (rest lista) maxSum))))
 
 (defun listaMaxSum (lista)
   (devuelveListaMaxSum lista (maximaSumatoria lista)))
+
+; Escriba una función/predicado que tome una lista L donde todos sus elementos son sublistas de números ordenados de menor a mayor (sin sublistas) y devuelva la lista resultante de intercalar dichas sublistas, es decir, el resultado será una lista ordenada.
+
+; L=((4 9 13) (3) (1 2 5 8 8 11) () (7 24)) , el resultado es (1 2 3 4 5 7 8 8 9 11 13 24) 
+
+(defun linealizaLista (lista)
+  (cond
+   ((null lista) lista)
+   ((listp (first lista)) (append (linealizaLista (first lista)) (linealizaLista (rest lista))))
+   (T (cons (first lista) (linealizaLista (rest lista))))))
+
+(defun minim (lista)
+  (cond
+   ((null (rest lista)) (first lista))
+   ((<= (first lista) (minim (rest lista))) (first lista))
+   (T (minim (rest lista)))))
+
+(defun eliminarElemento (L X)
+  (cond
+   ((null L) L)
+   ((= (first L) X) (rest L))
+   (T (cons (first L) (eliminarElemento (rest L) X)))))
+
+(defun menorAmayor (l)
+  (cond
+   ((null l) l)
+   (T (cons (minimo l) (menorAmayor (eliminarElemento l (minimo l)))))))
+
+(defun ordenarListas (listaConSL)
+  (menorAmayor (linealizaLista listaConSL)))
+
+
+
+
+; No se utilizo (ordena pero solo de a 'pares')
+(defun ordenar (listaLineal ordenamiento)
+  (cond
+   ((null (rest listaLineal)) (cons (first listaLineal) nil))
+   ((funcall ordenamiento (first listaLineal) (first (rest listaLineal))) (cons (first listaLineal) (ordenar (rest listaLineal) ordenamiento)))
+   (T (cons (first (rest listaLineal)) (ordenar (cons (first listaLineal) (rest (rest listaLineal))) ordenamiento)))))
+
+; Input: ordenar '(5 3 2 0 1 4) (lambda (x y) (> x y)) => NO LO HARIA BIEN
+; Input: ordenar '(5 2 3 0 1) (lambda (x y) (> x y)) => (5 3 2 1 0)
+
+
 
 
 
