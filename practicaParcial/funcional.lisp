@@ -80,3 +80,28 @@
 (defun listaMaxCant (lista)
   (linealizaSinSL (listaMax lista (cantMaxEl lista))))
 
+; Escriba una función/predicado que tome una lista L sin sublistas y número N, y devuelva la lista de las sumatorias de los elementos de L tomados de a N, es decir, el primer valor de la lista resultante será la sumatoria de los elemento de L desde el 1 al N, el segundo valor la sumatoria desde el 2 al N+1, y así sucesivamente. Si la cantidad de elementos de L es menor a N, se devuelve lista vacía. 
+; Ej: para L=(5 3 7 5 4 4 8 9) y N=3, el resultado es (15 15 16 13 16 21)
+
+(defun largo (lista)
+  (cond
+   ((null lista) 0)
+   (T (+ 1 (largo (rest lista))))))
+
+; Debe recibir una lista donde haya valores desde y hasta.
+(defun sumatoriaDesdeHasta (L D H Pos)
+  (cond
+   ((= D (+ 1 H)) 0)
+   ((< Pos D) (sumatoriaDesdeHasta (rest L) D H (+ 1 Pos)))
+   (T (+ (first L) (sumatoriaDesdeHasta (rest L) 1 (- H D) Pos)))))
+
+(defun eliminarElementosHasta (L H)
+  (cond
+   ((= 0 H) L)
+   (T (eliminarElementosHasta (rest L) (- H 1)))))
+
+(defun sumatoriaLista (L N)
+  (cond
+   ((< (- (largo L) N) 0) nil)
+   ((null L) L)
+   (T (cons (sumatoriaDesdeHasta L 1 N 1) (sumatoriaLista (rest L) N)))))
