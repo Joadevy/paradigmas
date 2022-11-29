@@ -116,16 +116,29 @@
 
 (defun sumatoriaN (lista)
   (cond
-   ((null (rest lista)) (first lista))
+   ((null lista) 0)
    (T (+ (first lista) (sumatoriaN (rest lista))))))
 
 ; Tengo que buscar la sumatoria mas grande en las sublistas y despues recorro y la que coincida con ese valor la muestro SIN LAS SUBLISTAS del medio.
 
 (defun maximaSumatoria (lista)
   (cond
-   ((null (rest lista)) (sumatoriaN (numerosDelNivel lista))) ; esta condicion no debe ir, pero para test.
-   ((>= (sumatoriaN (numerosDelNivel lista)) (maximaSumatoria (rest lista))) (sumatoriaN (numerosDelNivel lista)))
-   ((and (listp (first lista)) (>= (sumatoriaN (numerosDelNivel (first lista))) (sumatoriaN (numerosDelNivel (rest lista)))) (>= (sumatoriaN (numerosDelNivel (first lista))) (maximaSumatoria (first lista)))) (sumatoriaN (numerosDelNivel (first lista))))
-; Esta condicion no estoy seguro, es si dentro de la lista hay uno que sea mayor
-   ((and (listp (first lista)) (>= (sumatoriaN (numerosDelNivel (first lista))) (sumatoriaN (numerosDelNivel (rest lista)))) (< (sumatoriaN (numerosDelNivel (first lista))) (maximaSumatoria (first lista)))) (maximaSumatoria (numerosDelNivel (first lista))))
+   ((null lista) 0)
+   ((> (sumatoriaN (numerosDelNivel lista)) (maximaSumatoria (rest lista))) (sumatoriaN (numerosDelNivel lista)))
+   ((and (listp (first lista)) (> (sumatoriaN (numerosDelNivel (first lista))) (maximaSumatoria (rest lista))) (>= (sumatoriaN (numerosDelNivel (first lista))) (maximaSumatoria (first lista)))) (sumatoriaN (numerosDelNivel (first lista))))
+   ((and (listp (first lista)) (>= (sumatoriaN (numerosDelNivel (first lista))) (maximaSumatoria (rest lista))) (< (sumatoriaN (numerosDelNivel (first lista))) (maximaSumatoria (first lista)))) (maximaSumatoria (first lista)))
    (T (maximaSumatoria (rest lista)))))
+
+(defun devuelveListaMaxSum (lista maxSum) 
+  (condb
+   ((= (sumatoriaN (numerosDelNivel lista)) maxSum) (numerosDelNivel lista))
+   ((listp (first lista)) (devuelveListaMaxSum (first lista) maxSum))
+   (T (devuelveListaMaxSum (rest lista) maxSum))))
+
+(defun listaMaxSum (lista)
+  (devuelveListaMaxSum lista (maximaSumatoria lista)))
+
+
+
+
+
