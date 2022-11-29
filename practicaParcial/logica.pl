@@ -128,5 +128,3 @@ sumatoriasDeAN([P|R],N,[]):- largo([P|R],L), L<N.
 
 
 
-
-
