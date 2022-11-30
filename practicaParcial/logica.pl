@@ -170,6 +170,25 @@ ordenaListaConSL(L,F):- not(cantidadPar(L)), append(L,[[]],LP) , ordenaListaConS
 ordenaListaConSL([PL,SL|R],F):-cantidadPar([PL,SL|R]), is_list(PL), is_list(SL), fusionListasEnOrden(PL,SL,FL), ordenaListaConSL(R,FR), fusionListasEnOrden(FL,FR,F).
 
 
+% Devolver los minimos de una lista, incluyendo sublistas.
+%  NL=(2 (5 4 7 7) 5 (3 (4 9) 10) 6 (5 7) 4 9 2) =>  Resultado: (2 4 3 4 5) 
+
+minimoDeLista([P],P).
+minimoDeLista([P|R],P):- minimoDeLista(R,MR), P =< MR.
+minimoDeLista([P|R],MR):- minimoDeLista(R,MR), P > MR.
+
+numerosDeLista([],[]).
+numerosDeLista([P|R],[P|NR]):- number(P), numerosDeLista(R,NR).
+numerosDeLista([P|R], NR):- not(number(P)), numerosDeLista(R,NR).
+
+minimoPrimerNivel([P|R],[MPN|MR]):- numerosDeLista([P|R],LN), minimoDeLista(LN,MPN), minimosSubListas(R,MR).
+
+minimosSubListas([],[]).
+minimosSubListas([P|R],M):- is_list(P), minimoPrimerNivel(P,MP), minimosSubListas(R,MR), append(MP,MR,M).
+minimosSubListas([P|R],MR):- not(is_list(P)), minimosSubListas(R,MR).
+
+
+
 
 
 
