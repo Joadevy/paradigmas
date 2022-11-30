@@ -181,12 +181,11 @@ numerosDeLista([],[]).
 numerosDeLista([P|R],[P|NR]):- number(P), numerosDeLista(R,NR).
 numerosDeLista([P|R], NR):- not(number(P)), numerosDeLista(R,NR).
 
-minimoPrimerNivel([P|R],[MPN|MR]):- numerosDeLista([P|R],LN), minimoDeLista(LN,MPN), minimosSubListas(R,MR).
-
 minimosSubListas([],[]).
-minimosSubListas([P|R],M):- is_list(P), minimoPrimerNivel(P,MP), minimosSubListas(R,MR), append(MP,MR,M).
+minimosSubListas([P|R],M):- is_list(P), minimosListas(P,MP), minimosSubListas(R,MR), append(MP,MR,M).
 minimosSubListas([P|R],MR):- not(is_list(P)), minimosSubListas(R,MR).
 
+minimosListas([P|R],[MPN|MR]):- numerosDeLista([P|R],LN), minimoDeLista(LN,MPN), minimosSubListas(R,MR).
 
 
 

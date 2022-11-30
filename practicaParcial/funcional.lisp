@@ -36,7 +36,7 @@
 (defun minimosSublistas (lista)
   (cond
    ((null lista) nil)
-   ((listp (first lista)) (append (cons (minimo (listaNumeros (first lista))) (minimosSublistas (first lista))) (minimosSublistas (rest lista))))
+   ((listp (first lista)) (append (minimosLista (first lista)) (minimosSublistas (rest lista))))
    (T (minimosSublistas (rest lista)))))
 
 ;(defun minimoLySL (lista)
