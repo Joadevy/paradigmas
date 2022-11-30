@@ -173,7 +173,3 @@ ordenaListaConSL([PL,SL|R],F):-cantidadPar([PL,SL|R]), is_list(PL), is_list(SL),
 
 
 
-
-
-
-

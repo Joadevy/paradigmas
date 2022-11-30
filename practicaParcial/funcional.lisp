@@ -24,24 +24,20 @@
    ((<= (first lista) (minimo (rest lista))) (first lista))
    (T (minimo (rest lista)))))
 
-; Determina si una lista tiene o no sublitas.
-(defun sinSL (lista)
-  (cond
-   ((null lista) T)
-   ((listp (first lista)) nil)
-   (T (sinSL (rest lista)))))
-
-(defun eliminarNivel (lista)
+(defun listaNumeros (lista)
   (cond
    ((null lista) lista)
-   ((listp (first lista)) (cons (first lista) (eliminarNivel (rest lista))))
-   (T (eliminarNivel (rest lista)))))
+   ((numberp (first lista)) (cons (first lista) (listaNumeros (rest lista))))
+   (T (listaNumeros (rest lista)))))
 
-(defun soloNivelActual (lista)
+(defun minimosLista (lista)
+  (cons (minimo (listaNumeros lista)) (minimosSublistas (rest lista))))
+
+(defun minimosSublistas (lista)
   (cond
-   ((null (first lista)) nil)
-   ((listp (first lista)) (soloNivelActual (rest lista)))
-   (T (cons (first lista) (soloNivelActual (rest lista))))))
+   ((null lista) nil)
+   ((listp (first lista)) (append (cons (minimo (listaNumeros (first lista))) (minimosSublistas (first lista))) (minimosSublistas (rest lista))))
+   (T (minimosSublistas (rest lista)))))
 
 ;(defun minimoLySL (lista)
  ; (cond
