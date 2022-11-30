@@ -480,7 +480,7 @@
 
 
 
-; Escriba una funci�n (predicado) que tome como entrada una lista L (sin sublistas) y una lista M (que puede contener sublistas), y  devuelva una lista con N sublistas, donde N es la cantidad de elementos de L. Cada sublista debe contener todas las posiciones del i-esimo elemento de L en M (como si M fuese lineal. Adem�s, si el elemento no existe se pondr� 0).
+; Escriba una funcion (predicado) que tome como entrada una lista L (sin sublistas) y una lista M (que puede contener sublistas), y  devuelva una lista con N sublistas, donde N es la cantidad de elementos de L. Cada sublista debe contener todas las posiciones del i-esimo elemento de L en M (como si M fuese lineal. Ademas, si el elemento no existe se pondra 0).
 
 ;Ejemplo: L=(6 3 2 4 8) M=(2 (5 4 7 7) 5 (3 (4 9) 10) 6 (5 7) 4 9 2)
 ;Resultado: ((11) (7) (1 16) (3 8 14) (0))
@@ -492,11 +492,49 @@
    ((= elemento (first lista)) (cons pos (posicionesDelElemento elemento (rest lista) (+ 1 pos))))
    (T (posicionesDelElemento elemento (rest lista) (+ 1 pos)))))
 
-; Funcion que devuelve las posiciones del elemento en una lista, devuelve 0 si la auxiliar devuelve nil (no esta el elemento en la lista)
+; Funcion que devuelve las posiciones del elemento en una lista, devuelve una lista con (0) si la auxiliar devuelve nil (no esta el elemento en la lista)
 (defun posDelElem (elemento lista)
   (cond
    ((not (posicionesDelElemento elemento lista 1)) (cons 0 '()))
    (T (posicionesDelElemento elemento lista 1))))
+
+(defun linealizar (L)
+  (cond
+   ((null L) L)
+   ((listp (first L)) (append (linealizar (first L)) (linealizar (rest L))))
+   (T (cons (first L) (linealizar (rest L))))))
+
+; La lista debe estar linealizada para que funcione (que esten todos los elementos en el mismo nivel)
+(defun devolverPosicionesEnListaLineal (L M)
+  (cond
+   ((null L) L)
+   (T (cons (posDelElem (first L) M) (devolverPosicionesEnListaLineal (rest L) M)))))
+
+(defun devolverPosiciones (L M)
+  (devolverPosicionesEnListaLineal L (linealizar M)))
+
+; Devolver la posicion de un elemento de una lista L segun los elementos de una lista M, si no esta, se omite. 
+; Si el elemento no esta en un subnivel y hay sublistas se busca dentro de estas.
+
+(defun encontrarPosEl (E L P) ; P es la pos y debe empezar en 1
+  (cond
+   ((null L) 0)
+   ((and (not (listp (first L))) (= (first L) E)) P)
+   (T (encontrarPosEl E (rest L) (+ 1 P)))))
+
+(defun devolverPosEl (E L)
+  (cond
+   ((null L) 0)
+   ((/= 0 (encontrarPosEl E L 1)) (encontrarPosEl E L 1))
+   ((listp (first L)) (devolverPosEl E (first L)))
+   (T (devolverPosEl E (rest L)))))
+
+(defun posicionesDeElementos (L M)
+  (cond
+   ((null M) M)
+   ((/= 0 (devolverPosEl (first M) L)) (cons (devolverPosEl (first M) L) (posicionesDeElementos L (rest M))))
+   (T (posicionesDeElementos L (rest M)))))
+
 
 
 
